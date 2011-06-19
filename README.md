@@ -5,9 +5,9 @@ Attempting to test the speed of various Dependency Injection Containers.
 ## .Net
 Containers:
 
-- autofac
+- Autofac
+- Castle.Windsor
 - ninject 
 - Spring.Net
 - StructureMap
 - Unity
-- Windsor
