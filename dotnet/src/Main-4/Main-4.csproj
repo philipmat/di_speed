@@ -67,8 +67,10 @@
     <Compile Include="Locators\AutofacRunner.cs" />
     <Compile Include="Locators\CastleWindsorRunner.cs" />
     <Compile Include="Dummy.cs" />
-    <Compile Include="IDependencyInjectorRunner.cs" />
+    <Compile Include="ILocator.cs" />
     <Compile Include="Locators\NinjectRunner.cs" />
+    <Compile Include="PerfCounter.cs" />
+    <Compile Include="Printer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Locators\SpringRunner.cs" />

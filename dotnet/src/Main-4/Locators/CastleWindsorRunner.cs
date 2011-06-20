@@ -5,7 +5,7 @@ using System.Text;
 using Castle.Windsor;
 using Castle.MicroKernel.Registration;
 
-namespace Main_4
+namespace Main_4.Locators
 {
 	public class CastleWindsorRunner : ILocator
 	{
