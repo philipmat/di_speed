@@ -9,6 +9,6 @@ namespace Main_4
 	{
 		string Name { get; }
 		void WarmUp();
-		void Run(int numberOfTimes);
+		void Run();
 	}
 }

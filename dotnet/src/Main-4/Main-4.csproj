@@ -11,7 +11,8 @@
     <RootNamespace>Main_4</RootNamespace>
     <AssemblyName>Main-4</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -37,19 +38,50 @@
     <Reference Include="Autofac">
       <HintPath>..\..\lib-4.0\autofac\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\lib-4.0\castle.windsor\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\..\lib-4.0\castle.windsor\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging">
+      <HintPath>..\..\lib-4.0\spring.net\Common.Logging.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.Unity, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib-4.0\unity\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject">
+      <HintPath>..\..\lib-4.0\ninject\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Core">
+      <HintPath>..\..\lib-4.0\spring.net\Spring.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap">
+      <HintPath>..\..\lib-4.0\structuremap\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutofacRunner.cs" />
+    <Compile Include="CastleWindsorRunner.cs" />
     <Compile Include="Dummy.cs" />
     <Compile Include="IDependencyInjectorRunner.cs" />
+    <Compile Include="NinjectRunner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpringRunner.cs" />
+    <Compile Include="StructureMapRunner.cs" />
     <Compile Include="UnityRunner.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SpringConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
