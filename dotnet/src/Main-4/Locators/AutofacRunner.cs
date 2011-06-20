@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Autofac;
 
-namespace Main_4
+namespace Main_4.Locators
 {
-	public class AutofacRunner : IDependencyInjectorRunner
+	public class AutofacRunner : ILocator
 	{
 		IContainer k;
 		public string Name { get { return "Autofac"; } }

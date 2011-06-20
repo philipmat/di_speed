@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using StructureMap;
 
-namespace Main_4
+namespace Main_4.Locators
 {
-	public class StructureMapRunner : IDependencyInjectorRunner
+	public class StructureMapRunner : ILocator
 	{
 		public string Name {
 			get { return "StructureMap"; }

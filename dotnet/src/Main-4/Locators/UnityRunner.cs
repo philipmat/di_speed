@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Microsoft.Practices.Unity;
 
-namespace Main_4
+namespace Main_4.Locators
 {
-	public class UnityRunner : IDependencyInjectorRunner
+	public class UnityRunner : ILocator
 	{
 		IUnityContainer k;
 

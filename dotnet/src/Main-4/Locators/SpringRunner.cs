@@ -9,9 +9,9 @@ using Spring.Core.IO;
 using System.IO;
 using Spring.Objects.Factory;
 
-namespace Main_4
+namespace Main_4.Locators
 {
-	public class SpringRunner : IDependencyInjectorRunner
+	public class SpringRunner : ILocator
 	{
 		IObjectFactory k;
 

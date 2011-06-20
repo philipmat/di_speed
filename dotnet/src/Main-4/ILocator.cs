@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Main_4
 {
-	public interface IDependencyInjectorRunner
+	public interface ILocator
 	{
 		string Name { get; }
 		void WarmUp();

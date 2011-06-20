@@ -7,7 +7,7 @@ using Castle.MicroKernel.Registration;
 
 namespace Main_4
 {
-	public class CastleWindsorRunner : IDependencyInjectorRunner
+	public class CastleWindsorRunner : ILocator
 	{
 		IWindsorContainer k;
 		public string Name {

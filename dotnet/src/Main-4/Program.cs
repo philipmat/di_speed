@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using Main_4.Locators;
 
 namespace Main_4
 {
@@ -11,7 +12,7 @@ namespace Main_4
 		static readonly int RUNS = int.Parse("10,000", System.Globalization.NumberStyles.AllowThousands); // it's 2011: the compiler should understand 1_000_000.
 		const int LOOPS = 5;
 		static void Main(string[] args) {
-			var runners = new IDependencyInjectorRunner[] {
+			var runners = new ILocator[] {
 				new AutofacRunner(),
 				new CastleWindsorRunner(),
 				new NinjectRunner(),

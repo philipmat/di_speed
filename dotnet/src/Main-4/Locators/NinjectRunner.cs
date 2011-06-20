@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Ninject;
 
-namespace Main_4
+namespace Main_4.Locators
 {
-	public class NinjectRunner : IDependencyInjectorRunner
+	public class NinjectRunner : ILocator
 	{
 		IKernel k;
 		public string Name {
