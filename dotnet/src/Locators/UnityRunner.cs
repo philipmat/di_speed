@@ -9,10 +9,22 @@ namespace Locators
 		IUnityContainer k;
 
 		public string Name { get { return "Unity"; } }
-		public void WarmUp() {
+		private void Register(LifetimeManager manager) {
 			k = new UnityContainer();
-			k.RegisterType<IDummy, SimpleDummy>(new ContainerControlledLifetimeManager());
+			k.RegisterType<IDummy, SimpleDummy>(manager);
 		}
+		public void WarmUp_Singleton() {
+			Register(new ContainerControlledLifetimeManager());
+		}
+		public void WarmUp_NewEveryTime() {
+			Register(new TransientLifetimeManager()); // wonder if I should be using the PerResolve
+		}
+		public void WarmUp_PerThread() {
+			Register(new PerThreadLifetimeManager());
+		}
+		public void WarmUp_Loaded_Singleton() { }
+		public void WarmUp_Loaded_NewEveryTime() { }
+		public void WarmUp_Loaded_PerThread() { }
 
 		public void Run() {
 			if (k.IsRegistered<IDummy>())
