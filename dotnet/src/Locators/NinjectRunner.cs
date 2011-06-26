@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Dummies;
 using Ninject;
 
-namespace Main_4.Locators
+namespace Locators
 {
 	public class NinjectRunner : ILocator
 	{

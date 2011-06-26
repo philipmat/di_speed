@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Dummies;
 using Spring.Context;
 using Spring.Context.Support;
 using Spring.Objects.Factory.Xml;
@@ -9,7 +7,7 @@ using Spring.Core.IO;
 using System.IO;
 using Spring.Objects.Factory;
 
-namespace Main_4.Locators
+namespace Locators
 {
 	public class SpringRunner : ILocator
 	{

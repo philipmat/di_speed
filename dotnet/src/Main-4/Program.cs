@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
-using Main_4.Locators;
+using Locators;
+using Dummies;
 
 namespace Main_4
 {
@@ -11,6 +12,10 @@ namespace Main_4
 	{
 		static int RUNS;
 		static int LOOPS;
+		static string PAYLOAD = "one";
+		static Dictionary<string, Action<IEnumerable<ILocator>>> PAYLOADS = new Dictionary<string,Action<IEnumerable<ILocator>>> {
+			{ "one" , Program_One},
+		};
 		static void Main(string[] args) {
 			try {
 				ParseArgs(args);
@@ -28,16 +33,16 @@ namespace Main_4
 				new UnityRunner(),
 			};
 
-			foreach (var r in runners) {
-				r.WarmUp();
-			}
-			SimpleDummy.BLOW_UP_IF_IN_CONSTRUCTOR = false;
+			PAYLOADS[PAYLOAD](runners);
 
-			
+			RunLoop(runners);
+		}
+
+		private static void RunLoop(ILocator[] runners) {
 			for (var l=1; l <= RUNS; l++) {
 				p().BeginGroup(l.ToString());
 				foreach (var r in runners) {
-					var k = new PerfCounter(r.Name);k.Begin();
+					var k = new PerfCounter(r.Name); k.Begin();
 
 					for (var i = 0; i < LOOPS; i++) {
 						r.Run();
@@ -49,6 +54,14 @@ namespace Main_4
 			}
 			p().Flush();
 		}
+
+		static void Program_One(IEnumerable<ILocator> runners) {
+			foreach (var r in runners) {
+				r.WarmUp();
+			}
+			SimpleDummy.BLOW_UP_IF_IN_CONSTRUCTOR = false;
+		}
+
 
 		private static void ParseArgs(string[] args) {
 			LOOPS = int.Parse("10,000", System.Globalization.NumberStyles.AllowThousands);

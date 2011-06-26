@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <objects xmlns="http://www.springframework.net">
   <object name="IDummy"
-          type="Main_4.SimpleDummy"
+          type="Dummies.SimpleDummy"
           singleton="true"
           lazy-init="true"
           />

@@ -64,26 +64,43 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Locators\AutofacRunner.cs" />
-    <Compile Include="Locators\CastleWindsorRunner.cs" />
-    <Compile Include="Dummy.cs" />
-    <Compile Include="ILocator.cs" />
-    <Compile Include="Locators\NinjectRunner.cs" />
+    <Compile Include="..\Dummies\Dummy.cs">
+      <Link>Dummy.cs</Link>
+    </Compile>
+    <Compile Include="..\Locators\AutofacRunner.cs">
+      <Link>AutofacRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\Locators\CastleWindsorRunner.cs">
+      <Link>CastleWindsorRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\Locators\ILocator.cs">
+      <Link>ILocator.cs</Link>
+    </Compile>
+    <Compile Include="..\Locators\NinjectRunner.cs">
+      <Link>NinjectRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\Locators\SpringRunner.cs">
+      <Link>SpringRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\Locators\StructureMapRunner.cs">
+      <Link>StructureMapRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\Locators\UnityRunner.cs">
+      <Link>UnityRunner.cs</Link>
+    </Compile>
     <Compile Include="PerfCounter.cs" />
     <Compile Include="Printer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Locators\SpringRunner.cs" />
-    <Compile Include="Locators\StructureMapRunner.cs" />
-    <Compile Include="Locators\UnityRunner.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="SpringConfig.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Dummies\SpringConfig.xml">
+      <Link>SpringConfig.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

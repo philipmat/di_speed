@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Dummies;
 using Castle.Windsor;
 using Castle.MicroKernel.Registration;
 
-namespace Main_4.Locators
+namespace Locators
 {
 	public class CastleWindsorRunner : ILocator
 	{

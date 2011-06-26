@@ -3,6 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Main-4", "Main-4\Main-4.csproj", "{B5B14969-E839-4A0F-989F-011E02FC3DF3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Locators", "Locators", "{E0F0BE8C-787B-49AE-8ECB-F297445C6C3C}"
+	ProjectSection(SolutionItems) = preProject
+		Locators\AutofacRunner.cs = Locators\AutofacRunner.cs
+		Locators\CastleWindsorRunner.cs = Locators\CastleWindsorRunner.cs
+		Locators\ILocator.cs = Locators\ILocator.cs
+		Locators\NinjectRunner.cs = Locators\NinjectRunner.cs
+		Locators\SpringRunner.cs = Locators\SpringRunner.cs
+		Locators\StructureMapRunner.cs = Locators\StructureMapRunner.cs
+		Locators\UnityRunner.cs = Locators\UnityRunner.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dummies", "Dummies", "{ED9A7B76-6D2A-4D39-8C2F-3B034E0FCD5C}"
+	ProjectSection(SolutionItems) = preProject
+		Dummies\Dummy.cs = Dummies\Dummy.cs
+		Dummies\SpringConfig.xml = Dummies\SpringConfig.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
