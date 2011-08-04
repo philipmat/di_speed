@@ -42,7 +42,6 @@ Global
 		{63D81ABE-A134-4CE7-80F3-68CB40DCA50D}.Debug|x86.ActiveCfg = Debug|x86
 		{63D81ABE-A134-4CE7-80F3-68CB40DCA50D}.Debug|x86.Build.0 = Debug|x86
 		{63D81ABE-A134-4CE7-80F3-68CB40DCA50D}.Release|x86.ActiveCfg = Release|x86
-		{63D81ABE-A134-4CE7-80F3-68CB40DCA50D}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

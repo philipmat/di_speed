@@ -16,11 +16,11 @@ namespace Main_4
 		static int RUNS;
 		static int LOOPS;
 		static string PAYLOAD = "singleton";
-		static Dictionary<string, Func<IEnumerable<ILocator>>> PAYLOADS = new Dictionary<string,Func<IEnumerable<ILocator>>> {
-			{ "singleton" , Program_Singleton},
-			{ "transient" , Program_New},
-			{ "singleton_loaded" , Program_Singleton_Loaded},
-			{ "transient_loaded" , Program_New_Loaded},
+		static Dictionary<string, RunConfig> PAYLOADS = new Dictionary<string, RunConfig> {
+			{ "singleton" , new RunConfig { GetRunners = Program_Singleton, PreLoops =  PreLoops, PostLoops = PostLoopsSingleton, Run = (r, i, runState, loopState) => r.Run() }},
+			{ "transient" , new RunConfig { GetRunners = Program_New, PreLoops =  PreLoops, PostLoops = PostLoopsTransient, Run = (r, i, runState, loopState) => r.Run() }},
+			{ "singleton_loaded" , new RunConfig { GetRunners = Program_Singleton_Loaded, PreRuns = PreRunLoaded , Run = RunLoadedRunner }},
+			{ "transient_loaded" , new RunConfig { GetRunners = Program_New_Loaded, PreRuns = PreRunLoaded , Run = RunLoadedRunner }},
 		};
 		static void Main(string[] args) {
 			try {
@@ -32,34 +32,61 @@ namespace Main_4
 			}
 
 
-			var runners = PAYLOADS[PAYLOAD]();
+			var runConfig = PAYLOADS[PAYLOAD];
 
-			// RunLoop(runners);
-			RunLoopLoaded(runners);
+			RunLoop(runConfig);
 		}
 
-		private static void RunLoop(IEnumerable<ILocator> runners) {
-			for (var l=1; l <= RUNS; l++) {
-				p().BeginGroup(l.ToString());
+		private static void RunLoop(RunConfig runConfig) {
+			var runners = runConfig.GetRunners();
+			object preRunState = null;
+			object preLoopState = null;
+			if (runConfig.PreRuns != null) preRunState = runConfig.PreRuns();
+			Action<ILocator, int, object, object> run = runConfig.Run;
+			Func<ILocator, int, object, object> preLoopRun = runConfig.PreLoops;
+			Action<ILocator, object, object> postLoopRun = runConfig.PostLoops;
+
+			for (var l=0; l < RUNS; l++) {
+				p().BeginGroup((l+1).ToString());
 				foreach (var r in runners) {
-					SimpleDummy.COUNTER = 0;
+					if (preLoopRun != null) preLoopState = preLoopRun(r, l, preRunState);
+
 					var k = new PerfCounter(r.Name); k.Begin();
 
 					for (var i = 0; i < LOOPS; i++) {
-						r.Run();
+						run(r, i, preRunState, preLoopState);
 					}
 
 					k.End(); p().Collect(k);
-					if (SimpleDummy.COUNTER != LOOPS)
-						Console.WriteLine("{0} cheated and only created {1} objects instead of {2}.", r.Name, SimpleDummy.COUNTER, LOOPS);
+					if (postLoopRun != null) postLoopRun(r, preRunState, preLoopState);
 				}
 				p().EndGroup();
 			}
 			p().Flush();
+			if (runConfig.PostRuns != null) runConfig.PostRuns(preRunState);
 		}
 
 
-		private static void RunLoopLoaded(IEnumerable<ILocator> runners) {
+		private static object PreLoops(ILocator locator, int runNumber, object preRunState) {
+			SimpleDummy.COUNTER = 0; // guard to ensure the containers are honest - only works in unloaded mode
+			return runNumber;
+		}
+
+		private static void PostLoopsTransient(ILocator l, object preRunState, object preLoopState) {
+			// guard to ensure the containers are honest - only works in unloaded mode
+			if (SimpleDummy.COUNTER != LOOPS)
+				Console.WriteLine("{0} cheated and only created {1} objects instead of {2}.", l.Name, SimpleDummy.COUNTER, LOOPS);
+		}
+
+		private static void PostLoopsSingleton(ILocator l, object preRunState, object preLoopState) {
+			// guard to ensure the containers are honest - only works in unloaded mode
+			int expected = (int) preLoopState == 0 ? 1 : 0;  // only create an instance on the first load
+			if (SimpleDummy.COUNTER != expected)
+				Console.WriteLine("{0} expected to have created {2} objects instead of {1}.", l.Name, SimpleDummy.COUNTER, expected);
+		}
+
+
+		private static object PreRunLoaded() {
 			KeyValuePair<Type, string>[] types = new KeyValuePair<Type, string>[LOOPS];
 			var rnd = new Random();
 			for (var i = 0; i < LOOPS; i++) {
@@ -67,23 +94,12 @@ namespace Main_4
 				var name = rnd.Next(3).ToString();
 				types[i] = new KeyValuePair<Type, string>(t, name);
 			}
+			return types;
+		}
 
-			for (var l=1; l <= RUNS; l++) {
-				p().BeginGroup(l.ToString());
-				foreach (var rx in runners) {
-					ILocatorMulti r = (ILocatorMulti) rx;
-
-					var k = new PerfCounter(r.Name); k.Begin();
-
-					for (var i = 0; i < LOOPS; i++) {
-						r.Run(types[i].Key, types[i].Value);
-					}
-
-					k.End(); p().Collect(k);
-				}
-				p().EndGroup();
-			}
-			p().Flush();
+		private static void RunLoadedRunner(ILocator l, int index, object preRunState, object preLoopsState) {
+			var kvp = ((KeyValuePair<Type, string>[]) preRunState)[index];
+			((ILocatorMulti) l).Run(kvp.Key, kvp.Value);
 		}
 
 		static IEnumerable<ILocator> Program_Singleton() {
@@ -114,6 +130,7 @@ namespace Main_4
 			foreach (var r in runners) {
 				r.WarmUp_NewEveryTime();
 			}
+			SimpleDummy.BLOW_UP_IF_COUNTER_LARGER_THAN = LOOPS;
 			return runners;
 		}
 
@@ -187,6 +204,31 @@ namespace Main_4
 			if (Debugger.IsAttached) _p = new ConsolePrinter();
 			else _p = new AveragingPrinter();
 			return _p;
+		}
+
+		class RunConfig
+		{
+			public Func<IEnumerable<ILocator>> GetRunners { get; set; }
+			/// <summary>
+			/// Happens before the runs. Returns a "state" object which is passed into the Run along with the loop index
+			/// </summary>
+			public Func<object> PreRuns { get; set; }
+			/// <summary>
+			/// Happens before each locator's loops passing in the run number. Can return yet another state object.
+			/// </summary>
+			public Func<ILocator, int, object, object> PreLoops { get; set; }
+			/// <summary>
+			/// The actual run loop. 1st object is the PreRuns state, second is the PreLoops state
+			/// </summary>
+			public Action<ILocator, int, object, object> Run { get; set; }
+			/// <summary>
+			/// Called after the locator's loops are done. 1st object is the PreRuns state, second is the PreLoops state
+			/// </summary>
+			public Action<ILocator, object, object> PostLoops { get; set; }
+			/// <summary>
+			/// Happens after the runs. Object is the PreRuns state.
+			/// </summary>
+			public Action<object> PostRuns { get; set; }
 		}
 	}
 }
