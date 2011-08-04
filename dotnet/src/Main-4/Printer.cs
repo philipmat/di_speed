@@ -8,7 +8,7 @@ namespace Main_4
 	class Printer
 	{
 		protected List<KeyValuePair<string, List<PerfCounter>>> collection = new List<KeyValuePair<string, List<PerfCounter>>>();
-		
+
 		public virtual void BeginGroup(string groupName = null) {
 			var name = groupName ?? collection.Count.ToString();
 			collection.Add(new KeyValuePair<string, List<PerfCounter>>(name, new List<PerfCounter>()));
@@ -23,6 +23,8 @@ namespace Main_4
 
 		public virtual void Flush() {
 		}
+
+		public bool ShowMemory { get; set; }
 	}
 
 	class ConsolePrinter : Printer
@@ -34,7 +36,7 @@ namespace Main_4
 
 		public override void Collect(PerfCounter aCounter) {
 			base.Collect(aCounter);
-			Console.WriteLine("{0,-15}: {1,6:n0}ms ({2,10:n0} ticks). Mem: {3,4:n0}B, AC {4,4}B.",
+			Console.WriteLine("{0,-15}: {1,6:n0}ms ({2,10:n0} ticks)." + (ShowMemory ?" Mem: {3,4:n0}B, AC {4,4}B." : ""),
 									aCounter.Name, aCounter.ElapsedMilliseconds, aCounter.ElapsedTicks, aCounter.UncollectedMemory, aCounter.CollectedMemory);
 		}
 
@@ -71,11 +73,14 @@ namespace Main_4
 			int max_ms = counters.Max(x => x.EllapsedMilliseconds.ToString("n0").Length) + 1;
 			int max_mu = counters.Max(x => x.Memory.ToString("n0").Length) + 1;
 			int max_mc = counters.Max(x => x.CollectedMemory.ToString("n0").Length) + 1;
-			string f = "{0,-" + max_name + "}: {1," + max_ms + ":n0}ms. Mem: {2," + max_mu + ":n0}B b/c, {3," + max_mc + ":n0}B a/c.";
+
+			string f = "{0,-" + max_name + "}: {1," + max_ms + ":n0} ms.";
+			if (ShowMemory) f += " Mem: {2," + max_mu + ":n0}B b/c, {3," + max_mc + ":n0}B a/c.";
 			foreach(var c in counters) {
 				Console.WriteLine(string.Format(f, c.Name, c.EllapsedMilliseconds, c.Memory, c.CollectedMemory));
 			}
 		}
+
 
 		private class AvgInfo
 		{

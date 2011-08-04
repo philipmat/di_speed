@@ -78,6 +78,7 @@
       <HintPath>..\..\lib-4.0\structuremap\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
@@ -107,6 +108,9 @@
     </Compile>
     <Compile Include="..\Locators\LoadedSpringNetRunner.cs">
       <Link>LoadedSpringNetRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\Locators\LoadedSpringRunner.cs">
+      <Link>LoadedSpringRunner.cs</Link>
     </Compile>
     <Compile Include="..\Locators\LoadedStructureMapRunner.cs">
       <Link>LoadedStructureMapRunner.cs</Link>

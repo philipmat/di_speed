@@ -23,7 +23,7 @@ namespace Generators
 			using (var f = new StreamWriter(string.Format(runners, "LoadedAutofacRunner.cs"))) { Generate_Autofac(f); }
 			using (var f = new StreamWriter(string.Format(runners, "LoadedCastleWindsorRunner.cs"))) { Generate_CastleWindsor(f); }
 			using (var f = new StreamWriter(string.Format(runners, "LoadedNinjectRunner.cs"))) { Generate_Ninject(f); }
-			using (var f = new StreamWriter(string.Format(runners, "LoadedSpringNetRunner.cs"))) { Generate_SpringNet(f); }
+			using (var f = new StreamWriter(string.Format(runners, "LoadedSpringRunner.cs"))) { Generate_Spring(f); }
 			using (var f = new StreamWriter(string.Format(runners, "LoadedStructureMapRunner.cs"))) { Generate_StructureMap(f); }
 			using (var f = new StreamWriter(string.Format(runners, "LoadedUnityRunner.cs"))) { Generate_Unity(f); }
 			
@@ -207,7 +207,73 @@ namespace Locators
 }");
 		}
 
-		static void Generate_SpringNet(TextWriter @out) { }
+		static void Generate_Spring(TextWriter @out) {
+			var sb_s = new StringBuilder();
+			var sb_n = new StringBuilder();
+			var K = NUM_I * K_TO_I;
+			for (var k = 0; k < K; k++) {
+				int i = k / K_TO_I;
+				sb_s.AppendFormat("<object name=\"\"IDummy{1}_{2}\"\" type=\"\"Dummies.SimpleDummy{0}\"\" singleton=\"\"true\"\" lazy-init=\"\"true\"\" />\r\n", k, i, k % K_TO_I);
+				sb_n.AppendFormat("<object name=\"\"IDummy{1}_{2}\"\" type=\"\"Dummies.SimpleDummy{0}\"\" singleton=\"\"false\"\" />\r\n", k, i, k % K_TO_I);
+			}
+			@out.Write(
+@"
+using System;
+using Dummies;
+using Spring.Context;
+using Spring.Context.Support;
+using Spring.Objects.Factory.Xml;
+using Spring.Core.IO;
+using System.IO;
+using Spring.Objects.Factory;
+using System.Text;
+
+namespace Locators
+{
+	public class LoadedSpringRunner : ILocatorMulti
+	{
+		IObjectFactory k;
+
+		const string CONFIG_SINGLETON = @""
+<objects xmlns=""""http://www.springframework.net"""">
+" + sb_s.ToString() + @"
+</objects>"";
+
+
+		const string CONFIG_TRANSIENT = @""
+<objects xmlns=""""http://www.springframework.net"""">
+" + sb_n.ToString() + @"
+</objects>"";
+
+		public string Name {
+			get { return ""Spring""; }
+		}
+
+		public void WarmUp_Singleton() {
+
+			k = new XmlObjectFactory(new InputStreamResource(new MemoryStream(Encoding.UTF8.GetBytes(CONFIG_SINGLETON)), ""config""));
+			// k = new XmlApplicationContext(""file://SpringConfig.xml"");
+			// var ctx = new GenericApplicationContext();
+			// ctx.RegisterObjectDefinition
+		}
+		public void WarmUp_NewEveryTime() {
+			k = new XmlObjectFactory(new InputStreamResource(new MemoryStream(Encoding.UTF8.GetBytes(CONFIG_TRANSIENT)), ""config""));
+		}
+		public void WarmUp_PerThread() { }
+
+		public void Run() { throw new NotImplementedException(); }
+
+		public void Run(Type t, string name) {
+			var typeKey = string.Format(""{0}_{1}"", t.Name, name);
+			if (k.ContainsObject(typeKey))
+				((IDummy) k.GetObject(typeKey)).Do();
+			else
+				throw new InvalidOperationException(string.Format(""{0} couldn't find a dummy to practice on."", this.Name));
+		}
+	}
+}"
+);
+		}
 
 		static void Generate_StructureMap(TextWriter @out) {
 			var sb_s = new StringBuilder();

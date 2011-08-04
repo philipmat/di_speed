@@ -5,6 +5,7 @@ using System.Text;
 using System.Diagnostics;
 using Locators;
 using Dummies;
+using System.Configuration;
 
 namespace Main_4
 {
@@ -140,7 +141,7 @@ namespace Main_4
 				new LoadedAutofacRunner(),
 				new LoadedCastleWindsorRunner(),
 				new LoadedNinjectRunner(),
-				// new LoadedSpringRunner(),
+				new LoadedSpringRunner(),
 				new LoadedStructureMapRunner(),
 				new LoadedUnityRunner(),
 			};
@@ -155,7 +156,7 @@ namespace Main_4
 				new LoadedAutofacRunner(),
 				new LoadedCastleWindsorRunner(),
 				new LoadedNinjectRunner(),
-				// new LoadedSpringRunner(),
+				new LoadedSpringRunner(),
 				new LoadedStructureMapRunner(),
 				new LoadedUnityRunner(),
 			};
@@ -201,8 +202,13 @@ namespace Main_4
 		static Printer _p;
 		private static Printer p() {
 			if (_p != null) return _p;
+			bool showMemory = false;
+			if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["show_memory"]))
+				bool.TryParse(ConfigurationManager.AppSettings["show_memory"], out showMemory);
+
 			if (Debugger.IsAttached) _p = new ConsolePrinter();
 			else _p = new AveragingPrinter();
+			_p.ShowMemory = showMemory;
 			return _p;
 		}
 

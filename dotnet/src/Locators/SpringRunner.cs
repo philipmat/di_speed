@@ -16,20 +16,13 @@ namespace Locators
 
 		const string CONFIG_SINGLETON = @"
 <objects xmlns=""http://www.springframework.net"">
-  <object name=""IDummy""
-	type=""Dummies.SimpleDummy""
-	singleton=""true""
-	lazy-init=""true""
-          />
+  <object name=""IDummy"" type=""Dummies.SimpleDummy"" singleton=""true"" lazy-init=""true"" />
 </objects>";
 
 
 		const string CONFIG_TRANSIENT = @"
 <objects xmlns=""http://www.springframework.net"">
-  <object name=""IDummy""
-	type=""Dummies.SimpleDummy""
-	singleton=""false""
-          />
+  <object name=""IDummy"" type=""Dummies.SimpleDummy"" singleton=""false"" />
 </objects>";
 
 		public string Name {

@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Locators", "Locators", "{E0
 		Locators\LoadedCastleWindsorRunner.cs = Locators\LoadedCastleWindsorRunner.cs
 		Locators\LoadedNinjectRunner.cs = Locators\LoadedNinjectRunner.cs
 		Locators\LoadedSpringNetRunner.cs = Locators\LoadedSpringNetRunner.cs
+		Locators\LoadedSpringRunner.cs = Locators\LoadedSpringRunner.cs
 		Locators\LoadedStructureMapRunner.cs = Locators\LoadedStructureMapRunner.cs
 		Locators\LoadedUnityRunner.cs = Locators\LoadedUnityRunner.cs
 		Locators\NinjectRunner.cs = Locators\NinjectRunner.cs
