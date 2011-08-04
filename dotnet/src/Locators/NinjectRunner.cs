@@ -20,9 +20,6 @@ namespace Locators
 			k.Bind<IDummy>().To<SimpleDummy>().InTransientScope();
 		}
 		public void WarmUp_PerThread() { }
-		public void WarmUp_Loaded_Singleton() { }
-		public void WarmUp_Loaded_NewEveryTime() { }
-		public void WarmUp_Loaded_PerThread() { }
 
 		public void Run() {
 			// if (k.CanResolve(k.CreateRequest(typeof(IDummy), binding => true, new Ninject.Parameters.IParameter[0], false, false)))

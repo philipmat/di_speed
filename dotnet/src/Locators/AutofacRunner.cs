@@ -19,10 +19,8 @@ namespace Locators
 			builder.RegisterType<SimpleDummy>().As<IDummy>();
 			k = builder.Build();
 		}
+
 		public void WarmUp_PerThread() { }
-		public void WarmUp_Loaded_Singleton() { }
-		public void WarmUp_Loaded_NewEveryTime() { }
-		public void WarmUp_Loaded_PerThread() { }
 
 
 		public void Run() {
@@ -31,5 +29,8 @@ namespace Locators
 			else
 				throw new InvalidOperationException(string.Format("{0} couldn't find a dummy to practice on.", this.Name));
 		}
+
+
+
 	}
 }

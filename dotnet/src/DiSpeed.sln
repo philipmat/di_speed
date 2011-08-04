@@ -8,6 +8,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Locators", "Locators", "{E0
 		Locators\AutofacRunner.cs = Locators\AutofacRunner.cs
 		Locators\CastleWindsorRunner.cs = Locators\CastleWindsorRunner.cs
 		Locators\ILocator.cs = Locators\ILocator.cs
+		Locators\LoadedAutofacRunner.cs = Locators\LoadedAutofacRunner.cs
+		Locators\LoadedCastleWindsorRunner.cs = Locators\LoadedCastleWindsorRunner.cs
+		Locators\LoadedNinjectRunner.cs = Locators\LoadedNinjectRunner.cs
+		Locators\LoadedSpringNetRunner.cs = Locators\LoadedSpringNetRunner.cs
+		Locators\LoadedStructureMapRunner.cs = Locators\LoadedStructureMapRunner.cs
+		Locators\LoadedUnityRunner.cs = Locators\LoadedUnityRunner.cs
 		Locators\NinjectRunner.cs = Locators\NinjectRunner.cs
 		Locators\SpringRunner.cs = Locators\SpringRunner.cs
 		Locators\StructureMapRunner.cs = Locators\StructureMapRunner.cs
@@ -17,8 +23,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dummies", "Dummies", "{ED9A7B76-6D2A-4D39-8C2F-3B034E0FCD5C}"
 	ProjectSection(SolutionItems) = preProject
 		Dummies\Dummy.cs = Dummies\Dummy.cs
+		Dummies\MultiDummy.cs = Dummies\MultiDummy.cs
 		Dummies\SpringConfig.xml = Dummies\SpringConfig.xml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generators", "Generators\Generators.csproj", "{63D81ABE-A134-4CE7-80F3-68CB40DCA50D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +39,10 @@ Global
 		{B5B14969-E839-4A0F-989F-011E02FC3DF3}.Debug|x86.Build.0 = Debug|x86
 		{B5B14969-E839-4A0F-989F-011E02FC3DF3}.Release|x86.ActiveCfg = Release|x86
 		{B5B14969-E839-4A0F-989F-011E02FC3DF3}.Release|x86.Build.0 = Release|x86
+		{63D81ABE-A134-4CE7-80F3-68CB40DCA50D}.Debug|x86.ActiveCfg = Debug|x86
+		{63D81ABE-A134-4CE7-80F3-68CB40DCA50D}.Debug|x86.Build.0 = Debug|x86
+		{63D81ABE-A134-4CE7-80F3-68CB40DCA50D}.Release|x86.ActiveCfg = Release|x86
+		{63D81ABE-A134-4CE7-80F3-68CB40DCA50D}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

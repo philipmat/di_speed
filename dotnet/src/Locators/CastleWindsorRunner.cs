@@ -35,5 +35,8 @@ namespace Locators
 			else
 				throw new InvalidOperationException(string.Format("{0} couldn't find a dummy to practice on.", this.Name));
 		}
+
+
+
 	}
 }

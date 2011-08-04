@@ -10,12 +10,17 @@ namespace Main_4
 {
 	class Program
 	{
+		const int LOADED_INTERFACES = 222;
+		const int CLASSES_PER_INTERFACE = 3;
+
 		static int RUNS;
 		static int LOOPS;
 		static string PAYLOAD = "singleton";
 		static Dictionary<string, Func<IEnumerable<ILocator>>> PAYLOADS = new Dictionary<string,Func<IEnumerable<ILocator>>> {
 			{ "singleton" , Program_Singleton},
 			{ "transient" , Program_New},
+			{ "singleton_loaded" , Program_Singleton_Loaded},
+			{ "transient_loaded" , Program_New_Loaded},
 		};
 		static void Main(string[] args) {
 			try {
@@ -29,7 +34,8 @@ namespace Main_4
 
 			var runners = PAYLOADS[PAYLOAD]();
 
-			RunLoop(runners);
+			// RunLoop(runners);
+			RunLoopLoaded(runners);
 		}
 
 		private static void RunLoop(IEnumerable<ILocator> runners) {
@@ -46,6 +52,34 @@ namespace Main_4
 					k.End(); p().Collect(k);
 					if (SimpleDummy.COUNTER != LOOPS)
 						Console.WriteLine("{0} cheated and only created {1} objects instead of {2}.", r.Name, SimpleDummy.COUNTER, LOOPS);
+				}
+				p().EndGroup();
+			}
+			p().Flush();
+		}
+
+
+		private static void RunLoopLoaded(IEnumerable<ILocator> runners) {
+			KeyValuePair<Type, string>[] types = new KeyValuePair<Type, string>[LOOPS];
+			var rnd = new Random();
+			for (var i = 0; i < LOOPS; i++) {
+				Type t = Type.GetType(string.Format("Dummies.IDummy{0}", rnd.Next(LOADED_INTERFACES)));
+				var name = rnd.Next(3).ToString();
+				types[i] = new KeyValuePair<Type, string>(t, name);
+			}
+
+			for (var l=1; l <= RUNS; l++) {
+				p().BeginGroup(l.ToString());
+				foreach (var rx in runners) {
+					ILocatorMulti r = (ILocatorMulti) rx;
+
+					var k = new PerfCounter(r.Name); k.Begin();
+
+					for (var i = 0; i < LOOPS; i++) {
+						r.Run(types[i].Key, types[i].Value);
+					}
+
+					k.End(); p().Collect(k);
 				}
 				p().EndGroup();
 			}
@@ -80,10 +114,39 @@ namespace Main_4
 			foreach (var r in runners) {
 				r.WarmUp_NewEveryTime();
 			}
-			SimpleDummy.BLOW_UP_IF_COUNTER_LARGER_THAN = LOOPS;
 			return runners;
 		}
 
+
+		static IEnumerable<ILocator> Program_Singleton_Loaded() {
+			var runners = new ILocator[] {
+				new LoadedAutofacRunner(),
+				new LoadedCastleWindsorRunner(),
+				new LoadedNinjectRunner(),
+				// new LoadedSpringRunner(),
+				new LoadedStructureMapRunner(),
+				new LoadedUnityRunner(),
+			};
+			foreach (var r in runners) {
+				r.WarmUp_Singleton();
+			}
+			return runners;
+		}
+
+		static IEnumerable<ILocator> Program_New_Loaded() {
+			var runners = new ILocator[] {
+				new LoadedAutofacRunner(),
+				new LoadedCastleWindsorRunner(),
+				new LoadedNinjectRunner(),
+				// new LoadedSpringRunner(),
+				new LoadedStructureMapRunner(),
+				new LoadedUnityRunner(),
+			};
+			foreach (var r in runners) {
+				r.WarmUp_NewEveryTime();
+			}
+			return runners;
+		}
 		
 
 		private static void ParseArgs(string[] args) {
@@ -93,6 +156,8 @@ namespace Main_4
 				switch (arg.ToLower()) {
 					case "singleton":
 					case "transient" :
+					case "singleton_loaded":
+					case "transient_loaded":
 						PAYLOAD = arg.ToLower();
 						break;
 					default:

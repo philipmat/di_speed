@@ -1,4 +1,5 @@
-﻿namespace Locators
+﻿using System;
+namespace Locators
 {
 	public interface ILocator
 	{
@@ -6,9 +7,11 @@
 		void WarmUp_Singleton();
 		void WarmUp_NewEveryTime();
 		void WarmUp_PerThread();
-		void WarmUp_Loaded_Singleton();
-		void WarmUp_Loaded_NewEveryTime();
-		void WarmUp_Loaded_PerThread();
 		void Run();
+	}
+
+	public interface ILocatorMulti : ILocator
+	{
+		void Run(Type t, string name);
 	}
 }
