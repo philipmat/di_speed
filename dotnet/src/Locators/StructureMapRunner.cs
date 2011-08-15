@@ -23,11 +23,7 @@ namespace Locators
 		public void WarmUp_Loaded_PerThread() { }
 
 		public void Run() {
-			IDummy d;
-			if ((d = ObjectFactory.TryGetInstance<IDummy>()) != null)
-				d.Do();
-			else
-				throw new InvalidOperationException(string.Format("{0} couldn't find a dummy to practice on.", this.Name));
+			(ObjectFactory.GetInstance<IDummy>()).Do();
 		}
 	}
 }

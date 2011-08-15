@@ -22,14 +22,7 @@ namespace Locators
 		public void WarmUp_PerThread() { }
 
 		public void Run() {
-			// if (k.CanResolve(k.CreateRequest(typeof(IDummy), binding => true, new Ninject.Parameters.IParameter[0], false, false)))
-			// 	k.Get<IDummy>().Do();
-			IDummy d;
-			if ((d = k.TryGet<IDummy>()) != null)
-				d.Do();
-			else
-				throw new InvalidOperationException(string.Format("{0} couldn't find a dummy to practice on.", this.Name));
-
+			k.Get<IDummy>().Do();
 		}
 	}
 }

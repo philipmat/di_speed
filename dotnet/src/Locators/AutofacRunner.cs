@@ -24,10 +24,7 @@ namespace Locators
 
 
 		public void Run() {
-			if (k.IsRegistered<IDummy>())
-				k.Resolve<IDummy>().Do();
-			else
-				throw new InvalidOperationException(string.Format("{0} couldn't find a dummy to practice on.", this.Name));
+			k.Resolve<IDummy>().Do();
 		}
 
 

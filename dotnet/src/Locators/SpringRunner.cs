@@ -46,10 +46,7 @@ namespace Locators
 
 		public void Run() {
 			var t = typeof(IDummy).Name;
-			if (k.ContainsObject(t))
-				((IDummy) k.GetObject(t)).Do();
-			else
-				throw new InvalidOperationException(string.Format("{0} couldn't find a dummy to practice on.", this.Name));
+			((IDummy) k.GetObject(t)).Do();
 		}
 	}
 }
