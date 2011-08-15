@@ -692,10 +692,7 @@ k.RegisterType<IDummy221, SimpleDummy665>("2", manager());
 		public void Run() { throw new NotImplementedException(); }
 
 		public void Run(Type t, string name) {
-			if (k.IsRegistered(t, name))
-				((IDummy) k.Resolve(t, name)).Do();
-			else
-				throw new InvalidOperationException(string.Format("{0} couldn't find a dummy to practice on.", this.Name));
+			((IDummy) k.Resolve(t, name)).Do();
 		}
 	}
 }

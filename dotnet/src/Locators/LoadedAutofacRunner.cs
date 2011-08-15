@@ -1358,10 +1358,7 @@ builder.RegisterType<SimpleDummy665>().Named<IDummy221>("2");
 		public void Run() { throw new NotImplementedException(); }
 
 		public void Run(Type t, string name) {
-			if (k.IsRegisteredWithName(name, t))
-				((IDummy) k.ResolveNamed(name, t)).Do();
-			else
-				throw new InvalidOperationException(string.Format("{0} couldn't find a dummy to practice on.", this.Name));
+			((IDummy) k.ResolveNamed(name, t)).Do();
 		}
 	}
 }

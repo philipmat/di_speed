@@ -1378,10 +1378,7 @@ namespace Locators
 
 		public void Run(Type t, string name) {
 			var typeKey = string.Format("{0}_{1}", t.Name, name);
-			if (k.ContainsObject(typeKey))
-				((IDummy) k.GetObject(typeKey)).Do();
-			else
-				throw new InvalidOperationException(string.Format("{0} couldn't find a dummy to practice on.", this.Name));
+			((IDummy) k.GetObject(typeKey)).Do();
 		}
 	}
 }

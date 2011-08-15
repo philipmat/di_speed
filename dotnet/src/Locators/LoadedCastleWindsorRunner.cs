@@ -1359,10 +1359,7 @@ k.Register(Component.For<IDummy221>().ImplementedBy<SimpleDummy665>().Named("IDu
 
 		public void Run(Type t, string name) {
 			var componentName = string.Format("{1}_{0}", name, t.Name);
-			if (k.Kernel.HasComponent(componentName))
-				((IDummy) k.Resolve(componentName, t)).Do();
-			else
-				throw new InvalidOperationException(string.Format("{0} couldn't find a dummy to practice on.", this.Name));
+			((IDummy) k.Resolve(componentName, t)).Do();
 		}
 	}
 }

@@ -100,10 +100,7 @@ namespace Locators
 		public void Run() { throw new NotImplementedException(); }
 
 		public void Run(Type t, string name) {
-			if (k.IsRegisteredWithName(name, t))
-				((IDummy) k.ResolveNamed(name, t)).Do();
-			else
-				throw new InvalidOperationException(string.Format(""{0} couldn't find a dummy to practice on."", this.Name));
+			((IDummy) k.ResolveNamed(name, t)).Do();
 		}
 	}
 }
@@ -149,10 +146,7 @@ namespace Locators
 
 		public void Run(Type t, string name) {
 			var componentName = string.Format(""{1}_{0}"", name, t.Name);
-			if (k.Kernel.HasComponent(componentName))
-				((IDummy) k.Resolve(componentName, t)).Do();
-			else
-				throw new InvalidOperationException(string.Format(""{0} couldn't find a dummy to practice on."", this.Name));
+			((IDummy) k.Resolve(componentName, t)).Do();
 		}
 	}
 }
@@ -197,11 +191,7 @@ namespace Locators
 		public void Run() { throw new NotImplementedException(); }
 
 		public void Run(Type t, string name) {
-			IDummy d;
-			if ((d = (k.TryGet(t, name) as IDummy)) != null)
-				d.Do();
-			else
-				throw new InvalidOperationException(string.Format(""{0} couldn't find a dummy to practice on."", this.Name));
+			((IDummy) k.Get(t, name)).Do();
 		}
 	}
 }");
@@ -265,10 +255,7 @@ namespace Locators
 
 		public void Run(Type t, string name) {
 			var typeKey = string.Format(""{0}_{1}"", t.Name, name);
-			if (k.ContainsObject(typeKey))
-				((IDummy) k.GetObject(typeKey)).Do();
-			else
-				throw new InvalidOperationException(string.Format(""{0} couldn't find a dummy to practice on."", this.Name));
+			((IDummy) k.GetObject(typeKey)).Do();
 		}
 	}
 }"
@@ -313,11 +300,7 @@ namespace Locators
 		public void Run() { throw new NotImplementedException(); }
 
 		public void Run(Type t, string name) {
-			IDummy d;
-			if ((d = (ObjectFactory.TryGetInstance(t, name) as IDummy)) != null)
-				d.Do();
-			else
-				throw new InvalidOperationException(string.Format(""{0} couldn't find a dummy to practice on."", this.Name));
+			((IDummy) ObjectFactory.GetNamedInstance(t, name)).Do();
 		}
 	}
 }
@@ -360,10 +343,7 @@ namespace Locators
 		public void Run() { throw new NotImplementedException(); }
 
 		public void Run(Type t, string name) {
-			if (k.IsRegistered(t, name))
-				((IDummy) k.Resolve(t, name)).Do();
-			else
-				throw new InvalidOperationException(string.Format(""{0} couldn't find a dummy to practice on."", this.Name));
+			((IDummy) k.Resolve(t, name)).Do();
 		}
 	}
 }
