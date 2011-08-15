@@ -16,19 +16,20 @@ namespace Main_4
 
 		static int RUNS;
 		static int LOOPS;
-		static string PAYLOAD = "singleton";
+		static string PAYLOAD = "singleton_loaded";
 		static Dictionary<string, RunConfig> PAYLOADS = new Dictionary<string, RunConfig> {
-			{ "singleton" , new RunConfig { GetRunners = Program_Singleton, PreLoops =  PreLoops, PostLoops = PostLoopsSingleton, Run = (r, i, runState, loopState) => r.Run() }},
-			{ "transient" , new RunConfig { GetRunners = Program_New, PreLoops =  PreLoops, PostLoops = PostLoopsTransient, Run = (r, i, runState, loopState) => r.Run() }},
+			// { "singleton" , new RunConfig { GetRunners = Program_Singleton, PreLoops =  PreLoops, PostLoops = PostLoopsSingleton, Run = (r, i, runState, loopState) => r.Run() }},
+			// { "transient" , new RunConfig { GetRunners = Program_New, PreLoops =  PreLoops, PostLoops = PostLoopsTransient, Run = (r, i, runState, loopState) => r.Run() }},
 			{ "singleton_loaded" , new RunConfig { GetRunners = Program_Singleton_Loaded, PreRuns = PreRunLoaded , Run = RunLoadedRunner }},
-			{ "transient_loaded" , new RunConfig { GetRunners = Program_New_Loaded, PreRuns = PreRunLoaded , Run = RunLoadedRunner }},
+			// { "transient_loaded" , new RunConfig { GetRunners = Program_New_Loaded, PreRuns = PreRunLoaded , Run = RunLoadedRunner }},
+			{ "singleton_loaded_ex" , new RunConfig { GetRunners = Program_Singleton_Loaded_Ex, PreRuns = PreRunLoaded , Run = RunLoadedRunner }},
 		};
 		static void Main(string[] args) {
 			try {
 				ParseArgs(args);
 			} catch (FormatException fex) {
 				Console.WriteLine(fex.Message);
-				Console.WriteLine("Usage: Main [r=10] [l=10,000] [singleton|transient|singleton_loaded|transient_loaded]");
+				Console.WriteLine("Usage: Main [r=10] [l=10,000] [" + string.Join("|", PAYLOADS.Keys) + "]");
 				return;
 			}
 
@@ -138,11 +139,11 @@ namespace Main_4
 
 		static IEnumerable<ILocator> Program_Singleton_Loaded() {
 			var runners = new ILocator[] {
-				new LoadedAutofacRunner(),
-				new LoadedCastleWindsorRunner(),
-				new LoadedNinjectRunner(),
-				new LoadedSpringRunner(),
-				new LoadedStructureMapRunner(),
+				//new LoadedAutofacRunner(),
+				//new LoadedCastleWindsorRunner(),
+				//new LoadedNinjectRunner(),
+				//new LoadedSpringRunner(),
+				//new LoadedStructureMapRunner(),
 				new LoadedUnityRunner(),
 			};
 			foreach (var r in runners) {
@@ -165,6 +166,22 @@ namespace Main_4
 			}
 			return runners;
 		}
+
+		static IEnumerable<ILocator> Program_Singleton_Loaded_Ex() {
+			var runners = new ILocator[] {
+				//new LoadedAutofacRunner(),
+				//new LoadedCastleWindsorRunner(),
+				//new LoadedNinjectRunner(),
+				//new LoadedSpringRunner(),
+				//new LoadedStructureMapRunner(),
+				new LoadedUnityRunner(false),
+			};
+			foreach (var r in runners) {
+				r.WarmUp_Singleton();
+			}
+			return runners;
+		}
+
 		
 
 		private static void ParseArgs(string[] args) {
@@ -175,6 +192,7 @@ namespace Main_4
 					case "singleton":
 					case "transient" :
 					case "singleton_loaded":
+					case "singleton_loaded_ex":
 					case "transient_loaded":
 						PAYLOAD = arg.ToLower();
 						break;

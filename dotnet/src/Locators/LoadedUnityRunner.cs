@@ -7,6 +7,13 @@ namespace Locators
 {	public class LoadedUnityRunner : ILocatorMulti
 	{
 		IUnityContainer k;
+		Func<Type, string, IDummy> dummyResolver;
+		public LoadedUnityRunner(bool useIsRegistered = true) {
+			if (useIsRegistered)
+				this.dummyResolver = Run_IR;
+			else
+				this.dummyResolver = Run_Ex;
+		}
 
 		public string Name { get { return "Unity"; } }
 		private void Register(Func<LifetimeManager> manager) {
@@ -692,10 +699,23 @@ k.RegisterType<IDummy221, SimpleDummy665>("2", manager());
 		public void Run() { throw new NotImplementedException(); }
 
 		public void Run(Type t, string name) {
+			IDummy d = dummyResolver(t, name);
+			if (d != null) d.Do();
+		}
+
+		public IDummy Run_IR(Type t, string name) {
 			if (k.IsRegistered(t, name))
-				((IDummy) k.Resolve(t, name)).Do();
+				return ((IDummy) k.Resolve(t, name));
 			else
 				throw new InvalidOperationException(string.Format("{0} couldn't find a dummy to practice on.", this.Name));
+		}
+
+		public IDummy Run_Ex(Type t, string name) {
+			try {
+				return k.Resolve<IDummy>();
+			}  catch (ResolutionFailedException) {
+				return null;
+			}
 		}
 	}
 }
