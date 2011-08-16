@@ -13,8 +13,8 @@ namespace Main_4
 	{
 		const int LOADED_INTERFACES = 222;
 		const int CLASSES_PER_INTERFACE = 3;
-		const int INTERFACE_INCREMENT = 50;
-
+		
+		static int INTERFACE_INCREMENT; 
 		static int RUNS;
 		static int LOOPS;
 		static string PAYLOAD = "singleton_loaded_ex";
@@ -161,8 +161,9 @@ namespace Main_4
 		
 
 		private static void ParseArgs(string[] args) {
-			LOOPS = int.Parse("100", System.Globalization.NumberStyles.AllowThousands);
-			RUNS = 2;
+			LOOPS = int.Parse(Debugger.IsAttached ? "1000" : "10000", System.Globalization.NumberStyles.AllowThousands);
+			RUNS = Debugger.IsAttached ? 2 : 5;
+			INTERFACE_INCREMENT = Debugger.IsAttached ? 50 : 20;
 			foreach (string arg in args) {
 				switch (arg.ToLower()) {
 					case "singleton":
