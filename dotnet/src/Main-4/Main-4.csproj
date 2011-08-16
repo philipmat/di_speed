@@ -88,47 +88,17 @@
     <Compile Include="..\Dummies\MultiDummy.cs">
       <Link>MultiDummy.cs</Link>
     </Compile>
-    <Compile Include="..\Locators\AutofacRunner.cs">
-      <Link>AutofacRunner.cs</Link>
-    </Compile>
-    <Compile Include="..\Locators\CastleWindsorRunner.cs">
-      <Link>CastleWindsorRunner.cs</Link>
-    </Compile>
     <Compile Include="..\Locators\ILocator.cs">
       <Link>ILocator.cs</Link>
-    </Compile>
-    <Compile Include="..\Locators\LoadedAutofacRunner.cs">
-      <Link>LoadedAutofacRunner.cs</Link>
-    </Compile>
-    <Compile Include="..\Locators\LoadedCastleWindsorRunner.cs">
-      <Link>LoadedCastleWindsorRunner.cs</Link>
-    </Compile>
-    <Compile Include="..\Locators\LoadedNinjectRunner.cs">
-      <Link>LoadedNinjectRunner.cs</Link>
-    </Compile>
-    <Compile Include="..\Locators\LoadedSpringNetRunner.cs">
-      <Link>LoadedSpringNetRunner.cs</Link>
-    </Compile>
-    <Compile Include="..\Locators\LoadedSpringRunner.cs">
-      <Link>LoadedSpringRunner.cs</Link>
-    </Compile>
-    <Compile Include="..\Locators\LoadedStructureMapRunner.cs">
-      <Link>LoadedStructureMapRunner.cs</Link>
-    </Compile>
-    <Compile Include="..\Locators\LoadedUnityRunner.cs">
-      <Link>LoadedUnityRunner.cs</Link>
     </Compile>
     <Compile Include="..\Locators\NinjectRunner.cs">
       <Link>NinjectRunner.cs</Link>
     </Compile>
-    <Compile Include="..\Locators\SpringRunner.cs">
-      <Link>SpringRunner.cs</Link>
+    <Compile Include="..\Locators\VariableLoadAutofacRunner.cs">
+      <Link>VariableLoadAutofacRunner.cs</Link>
     </Compile>
-    <Compile Include="..\Locators\StructureMapRunner.cs">
-      <Link>StructureMapRunner.cs</Link>
-    </Compile>
-    <Compile Include="..\Locators\UnityRunner.cs">
-      <Link>UnityRunner.cs</Link>
+    <Compile Include="..\Locators\VariableLoadUnityRunner.cs">
+      <Link>VariableLoadUnityRunner.cs</Link>
     </Compile>
     <Compile Include="PerfCounter.cs" />
     <Compile Include="Printer.cs" />

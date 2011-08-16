@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Locators", "Locators", "{E0
 		Locators\SpringRunner.cs = Locators\SpringRunner.cs
 		Locators\StructureMapRunner.cs = Locators\StructureMapRunner.cs
 		Locators\UnityRunner.cs = Locators\UnityRunner.cs
+		Locators\VariableLoadAutofacRunner.cs = Locators\VariableLoadAutofacRunner.cs
+		Locators\VariableLoadUnityRunner.cs = Locators\VariableLoadUnityRunner.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dummies", "Dummies", "{ED9A7B76-6D2A-4D39-8C2F-3B034E0FCD5C}"

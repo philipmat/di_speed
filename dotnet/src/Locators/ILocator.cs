@@ -14,4 +14,13 @@ namespace Locators
 	{
 		void Run(Type t, string name);
 	}
+
+	public interface ILocatorMultiVar
+	{
+		string Name { get; }
+		void WarmUp_Singleton(int howManyObjects);
+		void WarmUp_NewEveryTime(int howManyObjects);
+		void WarmUp_PerThread(int howManyObjects);
+		void Run(Type t, string name);
+	}
 }
