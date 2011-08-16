@@ -1,4 +1,3 @@
-
 using System;
 using Dummies;
 using Microsoft.Practices.Unity;
@@ -19,6 +18,11 @@ namespace Locators
 		}
 
 		public string Name { get { return "Unity"; } }
+
+		public void Dispose() {
+			k.Dispose();
+			k = null;
+		}
 		private void Register(int howManyInterfaces, Func<LifetimeManager> manager) {
 			k = new UnityContainer();
 			string @in, cn1, cn2, cn3;

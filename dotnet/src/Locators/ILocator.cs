@@ -15,7 +15,7 @@ namespace Locators
 		void Run(Type t, string name);
 	}
 
-	public interface ILocatorMultiVar
+	public interface ILocatorMultiVar : IDisposable
 	{
 		string Name { get; }
 		void WarmUp_Singleton(int howManyObjects);

@@ -1,4 +1,3 @@
-
 using System;
 using Dummies;
 using Autofac;
@@ -20,7 +19,10 @@ namespace Locators
 		}
 		public string Name { get { return "Autofac"; } }
 
-
+		public void Dispose() {
+			k.Dispose();
+			k = null;
+		}
 
 		public void WarmUp_Singleton(int howManyInterfaces) {
 			var builder = new ContainerBuilder();

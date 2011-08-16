@@ -23,10 +23,10 @@ namespace Main_4
 		static Dictionary<string, RunConfig> PAYLOADS = new Dictionary<string, RunConfig> {
 			// { "singleton" , new RunConfig { GetRunners = Program_Singleton, PreLoops =  PreLoops, PostLoops = PostLoopsSingleton, Run = (r, i, runState, loopState) => r.Run() }},
 			// { "transient" , new RunConfig { GetRunners = Program_New, PreLoops =  PreLoops, PostLoops = PostLoopsTransient, Run = (r, i, runState, loopState) => r.Run() }},
-			{ "singleton_loaded" , new RunConfig { GetRunners = Program_Singleton_Loaded, PreRuns = PreRunLoaded , Run = RunInvalidClassRunner }},
+			{ "singleton_loaded" , new RunConfig { GetRunners = Program_Singleton_Loaded, PreRuns = PreRunLoaded , Run = RunInvalidClassRunner, PostRuns = DisposeOfRunners }},
 			// { "transient_loaded" , new RunConfig { GetRunners = Program_New_Loaded, PreRuns = PreRunLoaded , Run = RunLoadedRunner }},
-			{ "singleton_loaded_ex" , new RunConfig { GetRunners = Program_Singleton_Loaded_Ex, PreRuns = PreRunLoaded , Run = RunInvalidClassRunner }},
-			{ "singleton_loaded_opt" , new RunConfig { GetRunners = Program_Singleton_Loaded, PreRuns = PreRunLoaded , Run = RunInvalidClassRunner }},
+			{ "singleton_loaded_ex" , new RunConfig { GetRunners = Program_Singleton_Loaded_Ex, PreRuns = PreRunLoaded , Run = RunInvalidClassRunner, PostRuns = DisposeOfRunners }},
+			{ "singleton_loaded_opt" , new RunConfig { GetRunners = Program_Singleton_Loaded, PreRuns = PreRunLoaded , Run = RunInvalidClassRunner, PostRuns = DisposeOfRunners }},
 		};
 
 		static void Main(string[] args) {
@@ -66,16 +66,16 @@ namespace Main_4
 						for (var i = 0; i < LOOPS; i++) {
 							run(r, i, preRunState, preLoopState);
 						}
-
+						
 						k.End(); p().Collect(k);
 						if (postLoopRun != null) postLoopRun(r, preRunState, preLoopState);
 					}
 					p().EndGroup();
 				}
 				p().EndGroup();
+				if (runConfig.PostRuns != null) runConfig.PostRuns(runners, preRunState);
 			}
 			p().Flush();
-			if (runConfig.PostRuns != null) runConfig.PostRuns(preRunState);
 		}
 
 
@@ -151,10 +151,17 @@ namespace Main_4
 			return runners;
 		}
 
+		static void DisposeOfRunners(IEnumerable<ILocatorMultiVar> runners, object preRunsState) {
+			foreach (var item in runners) {
+				item.Dispose();
+			}
+			GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
+			GC.WaitForPendingFinalizers();
+		}
 		
 
 		private static void ParseArgs(string[] args) {
-			LOOPS = int.Parse("1000", System.Globalization.NumberStyles.AllowThousands);
+			LOOPS = int.Parse("100", System.Globalization.NumberStyles.AllowThousands);
 			RUNS = 2;
 			foreach (string arg in args) {
 				switch (arg.ToLower()) {
@@ -215,7 +222,7 @@ namespace Main_4
 			/// <summary>
 			/// Happens after the runs. Object is the PreRuns state.
 			/// </summary>
-			public Action<object> PostRuns { get; set; }
+			public Action<IEnumerable<ILocatorMultiVar>, object> PostRuns { get; set; }
 		}
 	}
 }

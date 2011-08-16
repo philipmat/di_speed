@@ -157,14 +157,14 @@ namespace Main_4
 						   orderby row.Key
 						   select new {
 							   Line = row.Key,
-							   Cells = row.Select( r =>
-								   new { Column = r.Item2,
+							   Cells = row.SelectMany(x => x.Item3).GroupBy(x => x.Name).Select( x => 
+								   new { Column = x.Key, 
 									     Info = new AvgInfo {
-										   Name = r.Item2,
-										   EllapsedMilliseconds = (long) r.Item3.Average(pc => pc.ElapsedMilliseconds),
-										   EllapsedTicks = (long) r.Item3.Average(pc => pc.ElapsedTicks),
-										   Memory = (long) r.Item3.Average(pc => pc.UncollectedMemory),
-										   CollectedMemory = (long) r.Item3.Average(pc => pc.CollectedMemory)
+										   Name = x.Key,
+										   EllapsedMilliseconds = (long) x.Average(pc => pc.ElapsedMilliseconds),
+										   EllapsedTicks = (long) x.Average(pc => pc.ElapsedTicks),
+										   Memory = (long) x.Average(pc => pc.UncollectedMemory),
+										   CollectedMemory = (long) x.Average(pc => pc.CollectedMemory)
 									   }
 								   })
 						   };
