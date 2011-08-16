@@ -18,7 +18,7 @@ namespace Main_4
 		static int RUNS;
 		static int LOOPS;
 		static string PAYLOAD = "singleton_loaded_ex";
-		static Type INVALID = typeof(InvalidOperationException); // don't put a type with no constructor - Unity will create it even if not registered
+		static Type INVALID = typeof(InvalidOperationException); // don't put a type with unambiguous constructor(s) - Unity will create it even if not registered
 
 		static Dictionary<string, RunConfig> PAYLOADS = new Dictionary<string, RunConfig> {
 			// { "singleton" , new RunConfig { GetRunners = Program_Singleton, PreLoops =  PreLoops, PostLoops = PostLoopsSingleton, Run = (r, i, runState, loopState) => r.Run() }},
@@ -155,7 +155,7 @@ namespace Main_4
 
 		private static void ParseArgs(string[] args) {
 			LOOPS = int.Parse("1000", System.Globalization.NumberStyles.AllowThousands);
-			RUNS = 5;
+			RUNS = 2;
 			foreach (string arg in args) {
 				switch (arg.ToLower()) {
 					case "singleton":
