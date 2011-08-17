@@ -374,13 +374,12 @@ namespace Locators
 		public IDummy Run_IR(Type t, string name) {
 			if (k.IsRegistered(t, name))
 				return ((IDummy) k.Resolve(t, name));
-			else
-				throw new InvalidOperationException(string.Format(""{0} couldn't find a dummy to practice on."", this.Name));
+			return null;
 		}
 
 		public IDummy Run_Ex(Type t, string name) {
 			try {
-				return k.Resolve<IDummy>();
+				return (IDummy) k.Resolve(t, name);
 			}  catch (ResolutionFailedException) {
 				return null;
 			}

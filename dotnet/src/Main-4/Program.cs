@@ -6,6 +6,7 @@ using System.Diagnostics;
 using Locators;
 using Dummies;
 using System.Configuration;
+using Microsoft.Practices.Unity;
 
 namespace Main_4
 {
@@ -23,10 +24,12 @@ namespace Main_4
 		static Dictionary<string, RunConfig> PAYLOADS = new Dictionary<string, RunConfig> {
 			// { "singleton" , new RunConfig { GetRunners = Program_Singleton, PreLoops =  PreLoops, PostLoops = PostLoopsSingleton, Run = (r, i, runState, loopState) => r.Run() }},
 			// { "transient" , new RunConfig { GetRunners = Program_New, PreLoops =  PreLoops, PostLoops = PostLoopsTransient, Run = (r, i, runState, loopState) => r.Run() }},
-			{ "singleton_loaded" , new RunConfig { GetRunners = Program_Singleton_Loaded, PreRuns = PreRunLoaded , Run = RunInvalidClassRunner, PostRuns = DisposeOfRunners }},
+			// { "singleton_loaded" , new RunConfig { GetRunners = Program_Singleton_Loaded, PreRuns = PreRunLoaded , Run = RunInvalidClassRunner, PostRuns = DisposeOfRunners }},
+			{ "singleton_loaded" , new RunConfig { GetRunners = Program_Singleton_Loaded, PreRuns = PreRunLoaded , Run = RunLoadedRunner, PostRuns = DisposeOfRunners }},
 			// { "transient_loaded" , new RunConfig { GetRunners = Program_New_Loaded, PreRuns = PreRunLoaded , Run = RunLoadedRunner }},
-			{ "singleton_loaded_ex" , new RunConfig { GetRunners = Program_Singleton_Loaded_Ex, PreRuns = PreRunLoaded , Run = RunInvalidClassRunner, PostRuns = DisposeOfRunners }},
-			{ "singleton_loaded_opt" , new RunConfig { GetRunners = Program_Singleton_Loaded, PreRuns = PreRunLoaded , Run = RunInvalidClassRunner, PostRuns = DisposeOfRunners }},
+			//{ "singleton_loaded_ex" , new RunConfig { GetRunners = Program_Singleton_Loaded_Ex, PreRuns = PreRunLoaded , Run = RunInvalidClassRunner, PostRuns = DisposeOfRunners }},
+			{ "singleton_loaded_opt_0" , new RunConfig { GetRunners = Program_Singleton_Loaded_Opt0, PreRuns = PreRunLoaded , Run = RunLoadedRunner, PostRuns = DisposeOfRunners }},
+			{ "singleton_loaded_opt_1" , new RunConfig { GetRunners = Program_Singleton_Loaded_Opt1, PreRuns = PreRunLoaded , Run = RunLoadedRunner, PostRuns = DisposeOfRunners }},
 		};
 
 		static void Main(string[] args) {
@@ -50,7 +53,7 @@ namespace Main_4
 			object preLoopState = null;
 			for (var ifs = 1; ifs < LOADED_INTERFACES; ifs = ifs + INTERFACE_INCREMENT) {
 				var runners = runConfig.GetRunners(ifs);
-				if (runConfig.PreRuns != null) preRunState = runConfig.PreRuns();
+				if (runConfig.PreRuns != null) preRunState = runConfig.PreRuns(ifs);
 				Action<ILocatorMultiVar, int, object, object> run = runConfig.Run;
 				Func<ILocatorMultiVar, int, object, object> preLoopRun = runConfig.PreLoops;
 				Action<ILocatorMultiVar, object, object> postLoopRun = runConfig.PostLoops;
@@ -102,11 +105,11 @@ namespace Main_4
 		}
 
 
-		private static object PreRunLoaded() {
+		private static object PreRunLoaded(int load) {
 			KeyValuePair<Type, string>[] types = new KeyValuePair<Type, string>[LOOPS];
 			var rnd = new Random();
 			for (var i = 0; i < LOOPS; i++) {
-				Type t = Type.GetType(string.Format("Dummies.IDummy{0}", rnd.Next(LOADED_INTERFACES)));
+				Type t = Type.GetType(string.Format("Dummies.IDummy{0}", rnd.Next(load)));
 				var name = rnd.Next(3).ToString();
 				types[i] = new KeyValuePair<Type, string>(t, name);
 			}
@@ -124,8 +127,7 @@ namespace Main_4
 
 		static IEnumerable<ILocatorMultiVar> Program_Singleton_Loaded(int load) {
 			var runners = new ILocatorMultiVar[] {
-				new VariableLoadUnityRunner(),
-				new VariableLoadAutofacRunner(),
+				new VariableLoadUnityRunner(VariableLoadUnityRunner.RunMode.NoSafetyNet),
 			};
 			foreach (var r in runners) {
 				r.WarmUp_Singleton(load);
@@ -133,10 +135,35 @@ namespace Main_4
 			return runners;
 		}
 
+		static IEnumerable<ILocatorMultiVar> Program_Singleton_Loaded_Opt0(int load) {
+			var runners = new ILocatorMultiVar[] {
+				new VariableLoadUnityRunner(VariableLoadUnityRunner.RunMode.NoSafetyNet),
+			};
+			foreach (var r in runners) {
+				r.WarmUp_Singleton(load);
+			}
+			return runners;
+		}
+
+		private class Doer : IDo
+		{
+			public Doer(string unityContructorPreventer) {
+				
+			}
+			public void Do() { }
+		}
+
+		static IEnumerable<ILocatorMultiVar> Program_Singleton_Loaded_Opt1(int load) {
+			var runner = new VariableLoadUnityRunner(VariableLoadUnityRunner.RunMode.NoSafetyNet);
+			runner.WarmUp_Singleton(load);
+			runner.WarmUp_Singleton_Extra( (c, lm) => c.RegisterInstance<IDo>(new Doer("moof"), lm()));
+			return new[] { runner };
+		}
+
+
 		static IEnumerable<ILocatorMultiVar> Program_New_Loaded(int load) {
 			var runners = new ILocatorMultiVar[] {
 				new VariableLoadUnityRunner(),
-				new VariableLoadAutofacRunner(),
 			};
 			foreach (var r in runners) {
 				r.WarmUp_NewEveryTime(load);
@@ -146,8 +173,7 @@ namespace Main_4
 
 		static IEnumerable<ILocatorMultiVar> Program_Singleton_Loaded_Ex(int load) {
 			var runners = new ILocatorMultiVar[] {
-				new VariableLoadUnityRunner(false),
-				new VariableLoadAutofacRunner(false),
+				new VariableLoadUnityRunner(VariableLoadUnityRunner.RunMode.CatchingExceptions),
 			};
 			foreach (var r in runners) {
 				r.WarmUp_Singleton(load);
@@ -169,30 +195,24 @@ namespace Main_4
 			RUNS = Debugger.IsAttached ? 2 : 5;
 			INTERFACE_INCREMENT = Debugger.IsAttached ? 50 : 20;
 			foreach (string arg in args) {
-				switch (arg.ToLower()) {
-					case "singleton":
-					case "transient" :
-					case "singleton_loaded":
-					case "singleton_loaded_ex":
-					case "transient_loaded":
+				if (arg.StartsWith("singleton", StringComparison.CurrentCultureIgnoreCase) || 
+					arg.StartsWith("transient", StringComparison.CurrentCultureIgnoreCase)) {
 						PAYLOAD = arg.ToLower();
-						break;
-					default:
-						if (arg.StartsWith("l=", StringComparison.CurrentCultureIgnoreCase)) {
-							int i;
-							if (!int.TryParse(arg.Substring(2), System.Globalization.NumberStyles.AllowThousands, null, out i)) {
-								throw new FormatException(string.Format("{0} doesn't seem to be a number.", args));
-							}
-							LOOPS = i;
+				} else {
+					if (arg.StartsWith("l=", StringComparison.CurrentCultureIgnoreCase)) {
+						int i;
+						if (!int.TryParse(arg.Substring(2), System.Globalization.NumberStyles.AllowThousands, null, out i)) {
+							throw new FormatException(string.Format("{0} doesn't seem to be a number.", args));
 						}
-						if (arg.StartsWith("r=", StringComparison.CurrentCultureIgnoreCase)) {
-							int i;
-							if (!int.TryParse(arg.Substring(2), System.Globalization.NumberStyles.AllowThousands, null, out i)) {
-								throw new FormatException(string.Format("{0} doesn't seem to be a number.", arg));
-							}
-							RUNS = i;
+						LOOPS = i;
+					}
+					if (arg.StartsWith("r=", StringComparison.CurrentCultureIgnoreCase)) {
+						int i;
+						if (!int.TryParse(arg.Substring(2), System.Globalization.NumberStyles.AllowThousands, null, out i)) {
+							throw new FormatException(string.Format("{0} doesn't seem to be a number.", arg));
 						}
-						break;
+						RUNS = i;
+					}
 				}
 			}
 			Console.WriteLine("Doing {0} runs of {1} DI loops each. Program: {2}.", RUNS, LOOPS, PAYLOAD);
@@ -211,7 +231,7 @@ namespace Main_4
 			/// <summary>
 			/// Happens before the runs. Returns a "state" object which is passed into the Run along with the loop index
 			/// </summary>
-			public Func<object> PreRuns { get; set; }
+			public Func<int, object> PreRuns { get; set; }
 			/// <summary>
 			/// Happens before each locator's loops passing in the run number. Can return yet another state object.
 			/// </summary>
