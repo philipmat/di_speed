@@ -6,6 +6,7 @@ using System.Diagnostics;
 
 namespace Main_4
 {
+	[System.Diagnostics.DebuggerDisplay("{ElapsedMilliseconds}ms", Name="{Name}")]
 	class PerfCounter
 	{
 		public PerfCounter(string forName) {

@@ -63,9 +63,13 @@ namespace Main_4
 
 						var k = new PerfCounter(r.Name); k.Begin();
 
+						//System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+						//sw.Start();
 						for (var i = 0; i < LOOPS; i++) {
 							run(r, i, preRunState, preLoopState);
 						}
+						//sw.Stop();
+						//Console.WriteLine("{0}{2,3}: {1:n0}", r.Name, sw.ElapsedTicks, ifs);
 						
 						k.End(); p().Collect(k);
 						if (postLoopRun != null) postLoopRun(r, preRunState, preLoopState);
@@ -120,8 +124,8 @@ namespace Main_4
 
 		static IEnumerable<ILocatorMultiVar> Program_Singleton_Loaded(int load) {
 			var runners = new ILocatorMultiVar[] {
-				new VariableLoadAutofacRunner(),
 				new VariableLoadUnityRunner(),
+				new VariableLoadAutofacRunner(),
 			};
 			foreach (var r in runners) {
 				r.WarmUp_Singleton(load);
@@ -131,8 +135,8 @@ namespace Main_4
 
 		static IEnumerable<ILocatorMultiVar> Program_New_Loaded(int load) {
 			var runners = new ILocatorMultiVar[] {
-				new VariableLoadAutofacRunner(),
 				new VariableLoadUnityRunner(),
+				new VariableLoadAutofacRunner(),
 			};
 			foreach (var r in runners) {
 				r.WarmUp_NewEveryTime(load);
@@ -142,8 +146,8 @@ namespace Main_4
 
 		static IEnumerable<ILocatorMultiVar> Program_Singleton_Loaded_Ex(int load) {
 			var runners = new ILocatorMultiVar[] {
-				new VariableLoadAutofacRunner(false),
 				new VariableLoadUnityRunner(false),
+				new VariableLoadAutofacRunner(false),
 			};
 			foreach (var r in runners) {
 				r.WarmUp_Singleton(load);

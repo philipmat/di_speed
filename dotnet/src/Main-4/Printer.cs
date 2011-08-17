@@ -27,6 +27,7 @@ namespace Main_4
 
 		public bool ShowMemory { get; set; }
 
+		[System.Diagnostics.DebuggerDisplay("1={Item1}, 2={Item2}")]
 		public class MutableTuple<T1, T2> {
 			public MutableTuple (T1 item1, T2 item2) {
 				Item1 = item1;
@@ -36,6 +37,7 @@ namespace Main_4
 			public T2 Item2 { get ;set; }
 		}
 
+		[System.Diagnostics.DebuggerDisplay("1={Item1}, 2={Item2}, 3={Item3}")]
 		public class MutableTuple<T1, T2, T3> : MutableTuple<T1, T2> {
 			public MutableTuple (T1 item1, T2 item2, T3 item3) :base(item1, item2) {
 				Item3 = item3;
@@ -176,7 +178,7 @@ namespace Main_4
 			// if (ShowMemory) f += " Mem: {2," + max_mu + ":n0}B b/c, {3," + max_mc + ":n0}B a/c.";
 			Console.WriteLine(f, (new[] { "#" }).Union(columns).ToArray());
 			foreach (var k in counters) {
-				Console.WriteLine(f, (new object[] { k.Line }).AsEnumerable().Union(k.Cells.Select(c => (object) c.Info.EllapsedMilliseconds)).ToArray());
+				Console.WriteLine(f, (new object[] { k.Line }).AsEnumerable().Union(k.Cells.OrderBy(c => c.Column).Select(c => (object) c.Info.EllapsedMilliseconds)).ToArray());
 			}
 		}
 
